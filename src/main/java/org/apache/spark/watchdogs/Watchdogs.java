@@ -61,7 +61,10 @@ public class Watchdogs {
 							WatchdogResult watchdogResult = watchdog.check();
 							if (!watchdogResult.isOk()) {
 								if (watchdogResult.getFix().isPresent()) {
+									log.error(watchdog.name() + " failed with " + watchdogResult.getMsg() + " trying to fix...");
 									watchdogResult.getFix().get().run();
+								} else {
+									log.error(watchdog.name() + " failed with " + watchdogResult.getMsg());
 								}
 							}
 						} catch (Exception e) {
