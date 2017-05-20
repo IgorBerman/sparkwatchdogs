@@ -9,6 +9,12 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
+/**
+ * Probably due to some bug in spark core, sometime there is a situation when the cores are free and available, but application can't get them
+ * In this scenario it waiting for cores without terminating.
+ * When such application is killed, next retry to submit exactly same application gets all necessary cores and proceedes without a problem
+ * you can deploy some cron based solution to retry the submission of same application
+ */
 class CoresWaitingWatchdog implements Watchdog {
 	static final Logger log = LoggerFactory.getLogger(SparkStageHangingWatchdog.class);
 

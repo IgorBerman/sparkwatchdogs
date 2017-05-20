@@ -19,22 +19,34 @@ import java.util.concurrent.TimeUnit;
 public class Watchdogs {
 	static final Logger log = LoggerFactory.getLogger(SparkStageHangingWatchdog.class);
 
-	public static void install(final String statusEndpoint, final JavaSparkContext ctx) {
-		ThreadFactory threadFactory = new ThreadFactoryBuilder().setDaemon(true)
-				.setNameFormat("AppStatusChecker").build();
-		final long sleepTimeBetweenChecks = TimeUnit.MINUTES.toMillis(10);
+	/**
+	 * This is only an example, you can create with different arguments
+	 * @param ctx spark context
+	 * @param statusEndpoint http://master-ip:8080/json
+	 * @return
+	 */
+	public static List<Watchdog> createDefaultWatchdogs(final JavaSparkContext ctx, final String statusEndpoint) {
+		Gson gson = new Gson();
+		String appId = ctx.getConf().getAppId();
 		final long maxWaitingTimeForResources = TimeUnit.MINUTES.toMillis(10);
 		final int maxTaskExecutionTimeInHours = 3;
+		ResourceGetter resourceGetter = new DefaultResourceGetter();
+		Watchdog stagesWatchdog = new SparkStageHangingWatchdog(ctx, appId, maxTaskExecutionTimeInHours);
+		Watchdog coresWatchdog = new CoresWaitingWatchdog(ctx, resourceGetter, gson, statusEndpoint, maxWaitingTimeForResources);
+		List<Watchdog> watchdogs = ImmutableList.of(coresWatchdog, stagesWatchdog);
+
+		return watchdogs;
+	}
+
+	public static void install( final JavaSparkContext ctx, List<Watchdog> watchdogs, int sleepInMins) {
+		ThreadFactory threadFactory = new ThreadFactoryBuilder().setDaemon(true)
+				.setNameFormat("AppStatusChecker").build();
+		final long sleepTimeBetweenChecks = TimeUnit.MINUTES.toMillis(sleepInMins);
+
 		ExecutorService checkerThread = Executors.newFixedThreadPool(1, threadFactory);
 		checkerThread.execute(new Runnable() {
 			@Override
 			public void run() {
-				Gson gson = new Gson();
-				String appId = ctx.getConf().getAppId();
-				ResourceGetter resourceGetter = new DefaultResourceGetter();
-				Watchdog stagesWatchdog = new SparkStageHangingWatchdog(ctx, appId, maxTaskExecutionTimeInHours);
-				Watchdog coresWatchdog = new CoresWaitingWatchdog(ctx, resourceGetter, gson, statusEndpoint, maxWaitingTimeForResources);
-				List<Watchdog> watchdogs = ImmutableList.of(coresWatchdog, stagesWatchdog);
 				while (true) {
 					try {
 						Thread.sleep(sleepTimeBetweenChecks);

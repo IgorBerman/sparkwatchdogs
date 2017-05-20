@@ -11,7 +11,9 @@ import org.apache.spark.api.java.JavaSparkContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+/**
+ * Sometimes some stage hangs. Due to other reasons(writing to s3) we can't use speculation mode, so we prefer just to kill some stage
+ */
 class SparkStageHangingWatchdog implements Watchdog {
 	static final Logger log = LoggerFactory.getLogger(SparkStageHangingWatchdog.class);
 
@@ -48,16 +50,13 @@ class SparkStageHangingWatchdog implements Watchdog {
 		if (stagesThatTakesLongTime.isEmpty()) {
 			return new WatchdogResult("ok", true, Optional.<Runnable>empty());
 		}
-		Runnable fix = new Runnable() {
-			@Override
-			public void run() {
-				for (int stageId : stagesThatTakesLongTime) {
-					log.warn("Canceling state {} of app {} ", stageId, appId);
-					try {
-						ctx.sc().dagScheduler().cancelStage(stageId);
-					} catch (Exception e) {
-						log.error("Unable to cancel stage {} of app {}", stageId, appId, e);
-					}
+		Runnable fix = () -> {
+			for (int stageId : stagesThatTakesLongTime) {
+				log.warn("Canceling state {} of app {} ", stageId, appId);
+				try {
+					ctx.sc().dagScheduler().cancelStage(stageId);
+				} catch (Exception e) {
+					log.error("Unable to cancel stage {} of app {}", stageId, appId, e);
 				}
 			}
 		};
