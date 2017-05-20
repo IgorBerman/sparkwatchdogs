@@ -5,6 +5,10 @@ We have production etl jobs that run all day long. The system should be as autom
 We still trying to get this level, so we constantly building additional self-checks or as I call them "watchdogs". Many times it
  means that just killing some stage/job/application is better than just finding out that due to one stage the whole
  pipeline did nothing in last few hours and the whole pipeline is in huge delay.
+ 
+## Imprortant notice
+See pom.xml, all 3'd party libs are "provided", so to use it you need to add them to your fat jar explicitly or to your deployment lib.
+This will permit you to control dependencies, without adding to your dependency hell yet another problem.
 
 ## Example
 see [org.apache.spark.watchdogs.Watchdogs](src/main/java/org/apache/spark/watchdogs/Watchdogs.java) as usage example
