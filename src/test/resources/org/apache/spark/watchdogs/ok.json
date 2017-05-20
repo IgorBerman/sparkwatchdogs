@@ -1,0 +1,51 @@
+{
+url: "spark://172.30.0.85:7077",
+workers: [
+{
+id: "worker-20170514001735-172.30.0.4-48698",
+host: "172.30.0.4",
+port: 48698,
+webuiaddress: "http://ip-172-30-0-4.use.dynamicyield.com:8081",
+cores: 8,
+coresused: 7,
+coresfree: 1,
+memory: 60405,
+memoryused: 31744,
+memoryfree: 28661,
+state: "ALIVE",
+lastheartbeat: 1494924283685
+}
+],
+cores: 312,
+coresused: 273,
+memory: 2248053,
+memoryused: 1369088,
+activeapps: [
+{
+starttime: 1494920601112,
+id: "app-20170516074321-0041",
+name: "FlowApplicationWithScheduledScale.FlowArgsForScheduledScale(autoScaledClusterAppReservedCores=8, autoScaledClusterAppTotalCores=265, autoScaledClusterAppExecutorMemory=31g, autoScaledClusterMaster=spark://172.30.0.85:7077, autoScaledClusterStatusEndpoint=http://172.30.0.85:8080/json/)-flow-application",
+cores: 265,
+user: "spark",
+memoryperslave: 31744,
+submitdate: "Tue May 16 07:43:21 UTC 2017",
+state: "RUNNING",
+duration: 3683844
+}
+],
+completedapps: [
+{
+starttime: 1494907157765,
+id: "app-20170516035917-0000",
+name: "FlowApplicationWithScheduledScale.FlowArgsForScheduledScale(autoScaledClusterAppReservedCores=8, autoScaledClusterAppTotalCores=-8, autoScaledClusterAppExecutorMemory=31g, autoScaledClusterMaster=spark://172.30.0.85:7077, autoScaledClusterStatusEndpoint=http://172.30.0.85:8080/json/)-flow-application-big-sections",
+cores: -8,
+user: "spark",
+memoryperslave: 31744,
+submitdate: "Tue May 16 03:59:17 UTC 2017",
+state: "FINISHED",
+duration: 608494
+}
+],
+activedrivers: [ ],
+status: "ALIVE"
+}
