@@ -30,19 +30,19 @@ public class CoresWaitingWatchdogTest {
 
 	@Test
 	public void testEmptyResponse() throws Exception {
-		CoresWaitingWatchdog watchdog = new CoresWaitingWatchdog(ctx, resourceGetter, new Gson(), "url",  1);
+		CoresWaitingWatchdog watchdog = new CoresWaitingWatchdog(ctx, resourceGetter, new Gson(), "http://0.0.0.0:8080/json/",  1);
 		String json = "[]";
 
-		when(resourceGetter.get("url")).thenReturn(json);
+		when(resourceGetter.get("http://0.0.0.0:8080/json/")).thenReturn(json);
 
 		assertTrue(watchdog.check().isOk());
 	}
 
 	@Test
 	public void testExceptionWhenGettingStatus() throws Exception {
-		CoresWaitingWatchdog watchdog = new CoresWaitingWatchdog(ctx, resourceGetter, new Gson(), "url", 1);
+		CoresWaitingWatchdog watchdog = new CoresWaitingWatchdog(ctx, resourceGetter, new Gson(), "http://0.0.0.0:8080/json/", 1);
 
-		when(resourceGetter.get("url")).thenThrow(new IllegalArgumentException("something happened"));
+		when(resourceGetter.get("http://0.0.0.0:8080/json/")).thenThrow(new IllegalArgumentException("something happened"));
 
 		assertTrue(watchdog.check().isOk());
 	}
@@ -50,12 +50,12 @@ public class CoresWaitingWatchdogTest {
 	@Test
 	public void testWhenOk() throws Exception {
 		when(conf.getAppId()).thenReturn("app-20170516074321-0041");
-		CoresWaitingWatchdog watchdog = new CoresWaitingWatchdog(ctx, resourceGetter, new Gson(), "url",  1);
+		CoresWaitingWatchdog watchdog = new CoresWaitingWatchdog(ctx, resourceGetter, new Gson(), "http://0.0.0.0:8080/json/",  1);
 
 		List<String> allLines = Files.readAllLines(Paths.get(this.getClass().getResource("ok.json").toURI()), Charset.defaultCharset());
 		String json = Joiner.on("\n").join(allLines);
 
-		when(resourceGetter.get("url")).thenReturn(json);
+		when(resourceGetter.get("http://0.0.0.0:8080/json/")).thenReturn(json);
 
 		assertTrue(watchdog.check().isOk());
 	}
@@ -64,12 +64,12 @@ public class CoresWaitingWatchdogTest {
 	@Test
 	public void testWhenWaitingNegativeCores() throws Exception {
 		when(conf.getAppId()).thenReturn("app-20170516074321-0041");
-		CoresWaitingWatchdog watchdog = new CoresWaitingWatchdog(ctx, resourceGetter, new Gson(), "url", 1);
+		CoresWaitingWatchdog watchdog = new CoresWaitingWatchdog(ctx, resourceGetter, new Gson(), "http://0.0.0.0:8080/json/", 1);
 
 		List<String> allLines = Files.readAllLines(Paths.get(this.getClass().getResource("waitingNegativeCores.json").toURI()), Charset.defaultCharset());
 		String json = Joiner.on("\n").join(allLines);
 
-		when(resourceGetter.get("url")).thenReturn(json);
+		when(resourceGetter.get("http://0.0.0.0:8080/json/")).thenReturn(json);
 
 		assertFalse(watchdog.check().isOk());
 	}
@@ -77,12 +77,12 @@ public class CoresWaitingWatchdogTest {
 	@Test
 	public void testWhenWaitingZeroCores() throws Exception {
 		when(conf.getAppId()).thenReturn("app-20170516074321-0041");
-		CoresWaitingWatchdog watchdog = new CoresWaitingWatchdog(ctx, resourceGetter, new Gson(), "url", 1);
+		CoresWaitingWatchdog watchdog = new CoresWaitingWatchdog(ctx, resourceGetter, new Gson(), "http://0.0.0.0:8080/json/", 1);
 
 		List<String> allLines = Files.readAllLines(Paths.get(this.getClass().getResource("waitingZeroCores.json").toURI()), Charset.defaultCharset());
 		String json = Joiner.on("\n").join(allLines);
 
-		when(resourceGetter.get("url")).thenReturn(json);
+		when(resourceGetter.get("http://0.0.0.0:8080/json/")).thenReturn(json);
 
 		assertFalse(watchdog.check().isOk());
 	}
