@@ -60,7 +60,9 @@ public class Watchdogs {
 							log.info("Watchdog: " + watchdog.name());
 							WatchdogResult watchdogResult = watchdog.check();
 							if (!watchdogResult.isOk()) {
-								watchdogResult.getFix().get().run();
+								if (watchdogResult.getFix().isPresent()) {
+									watchdogResult.getFix().get().run();
+								}
 							}
 						} catch (Exception e) {
 							log.warn("Can't check " + watchdog.name(), e);
