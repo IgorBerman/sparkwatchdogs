@@ -6,7 +6,7 @@ import java.util.Optional;
 /**
  * Created by igor on 5/20/17.
  */
-public class WatchdogResult {
+class WatchdogResult {
 	private final String msg;
 	private final boolean ok;
 	private final Optional<Runnable> fix;

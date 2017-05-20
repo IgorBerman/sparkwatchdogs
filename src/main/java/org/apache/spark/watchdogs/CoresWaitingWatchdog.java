@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Optional;
 
-public class CoresWaitingWatchdog implements Watchdog {
+class CoresWaitingWatchdog implements Watchdog {
 	static final Logger log = LoggerFactory.getLogger(SparkStageHangingWatchdog.class);
 
 	final String waitingStatusPrefix = "wait";

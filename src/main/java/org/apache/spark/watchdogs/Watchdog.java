@@ -1,6 +1,6 @@
 package org.apache.spark.watchdogs;
 
-public interface Watchdog {
+interface Watchdog {
 	WatchdogResult check();
 
 	default String name() {
